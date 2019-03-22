@@ -1,5 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { ProfileService } from 'src/app/services/profile.service';
+import { AlertController } from '@ionic/angular';
 
 @Component({
   selector: 'app-playlists',
@@ -12,10 +13,14 @@ export class PlaylistsPage implements OnInit{
   playlists$: any;
   searchTerm: string;
   playlistsTem: any;
-  constructor(private profileService: ProfileService) { }
+  constructor(private profileService: ProfileService, private alertController: AlertController) { }
 
   ngOnInit() {
     this.loading = true;
+    this.getPlaylists();
+  }
+
+  ionViewWillEnter() {
     this.getPlaylists();
   }
 
@@ -34,12 +39,45 @@ export class PlaylistsPage implements OnInit{
         });
   }
 
+  setNewPlaylist(name) {
+    this.profileService.addPlaylist(name).subscribe();
+  }
+
   filterPlaylists() {
     if (this.searchTerm) {
       this.playlists = this.playlists.filter(x => x.name.toLowerCase().includes(this.searchTerm.toLowerCase()));
     } else {
       this.playlists = this.playlistsTem;
     }
+  }
+
+  async presentAlertPrompt() {
+    const alert = await this.alertController.create({
+      header: 'Add new playlist',
+      inputs: [
+        {
+          name: 'playlistName',
+          type: 'text',
+          placeholder: 'Playlist name'
+        }
+      ],
+      buttons: [
+        {
+          text: 'Cancel',
+          role: 'cancel',
+          cssClass: 'secondary',
+          handler: () => {
+          }
+        }, {
+          text: 'Add',
+          handler:  data => {
+            this.setNewPlaylist(data.playlistName);
+          }
+        }
+      ]
+    });
+
+    await alert.present();
   }
 
 }

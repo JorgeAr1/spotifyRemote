@@ -80,4 +80,78 @@ module.exports = (app) => {
      *         description: Playlist object
      */
     app.post('/profile/playlist/:name', c(controller.addPlaylist, (req, res, next) => [req.params.name]));
+
+     /**
+     * @swagger
+     * /profile/playlist/:playlistId:
+     *   get:
+     *     tags:
+     *       - profile
+     *     description: Returns playlist info
+     *     produces:
+     *       - application/json
+     *     responses:
+     *       200:
+     *         description: Tracks object
+     */
+    app.get('/profile/playlists/:playlistId', c(controller.playlistInfo, (req, res, next) => [req.params.playlistId]));
+    /**
+     * @swagger
+     * /profile/listening/next:
+     *   post:
+     *     tags:
+     *       - profile
+     *     description: Skips to next track
+     *     produces:
+     *       - application/json
+     *     responses:
+     *       200:
+     *         description: Track object
+     */
+    app.post('/profile/listening/next', c(controller.nextTrack));
+
+    /**
+     * @swagger
+     * /profile/listening/previous:
+     *   post:
+     *     tags:
+     *       - profile
+     *     description: Skips to previous track
+     *     produces:
+     *       - application/json
+     *     responses:
+     *       200:
+     *         description: Track object
+     */
+    app.post('/profile/listening/previous', c(controller.previousTrack));
+
+    /**
+     * @swagger
+     * /profile/listening/play:
+     *   put:
+     *     tags:
+     *       - profile
+     *     description: Plays current playback
+     *     produces:
+     *       - application/json
+     *     responses:
+     *       200:
+     *         description: Track object
+     */
+    app.put('/profile/listening/play', c(controller.play));
+
+    /**
+     * @swagger
+     * /profile/listening/pause:
+     *   put:
+     *     tags:
+     *       - profile
+     *     description: Pauses current playback
+     *     produces:
+     *       - application/json
+     *     responses:
+     *       200:
+     *         description: Track object
+     */
+    app.put('/profile/listening/pause', c(controller.pause));
 };
